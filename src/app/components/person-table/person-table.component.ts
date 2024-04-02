@@ -8,12 +8,10 @@ import { Component } from '@angular/core';
   styleUrl: './person-table.component.css'
 })
 export class PersonTableComponent {
-
-
   person = {
     givenName: 'Maria',
     surName: 'Temponera',
     age: 0x20,
     email: 'mariatemp@aueb.gr'
-  }
+  };
 }
