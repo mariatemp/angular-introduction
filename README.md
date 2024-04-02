@@ -1,5 +1,63 @@
 # Εισαγωγή στο Angular Framework
 
+## Βήμα 8: Simple Datatable
+ 
+- Χρήση του https://cobbl.io/ για να παράξουμε ένα πίνακα με πολλά δεδομένα τύπου `ΕPerson` που ορίζουμε στο `/shared/interfaces/person.ts`:
+ 
+  ```typescript
+  export interface EPerson {
+    givenName: string;
+    surName: string;
+    age: string;
+    email: string;
+    address: string;
+    education: string;
+  }
+ 
+  export const ManyPerson: EPerson[] = [
+    {
+      given_name: 'Sarah',
+      surName: 'Howard',
+      age: '41',
+      email: 's.m.howard@yahoo.com',
+      education: 'Some college, no degree',
+    },
+    ...
+  ```
+ 
+- Δημιουργία του `SimpleDataTableComponent`: λαμβάνει δεδομένα τύπου `EPerson` και τα εμφανίζει σε έναν πίνακα με δυνατότητα ταξινόμησης ανά στήλη
+- Δημιουργία του `SimpleDataTableExampleComponent`: χρησιμοποιεί το `SimpleDataTableComponent`
+- Ενημέρωση του μενού της εφαρμογής μας
+ 
+  - `app.routes.ts`:
+ 
+    ```typescript
+    ...
+    {
+      path: 'simple-data-table-example',
+      component: SimpleDatatableExampleComponent,
+    }
+    ...
+    ```
+ 
+  - `list-group-menu.component.ts`:
+ 
+    ```typescript
+    ...
+    {
+      text: 'Simple Data Table Example',
+      routerLink: 'simple-data-table-example',
+    }
+    ...
+    ```
+ 
+- Εγκατάταση του `lodash-es`:
+ 
+  ```bash
+  npm i lodash-es
+  npm i --save-dev @types/lodash-es
+  ```
+
 ## Βήμα 7: Fancy App Menu με το [list-group](https://t.ly/vmYc2) του Bootstrap
  
 - Δημιουργία νέου interface `MenuItem` στο αρχείο `shared/interfaces/menu-item.ts`:
@@ -86,60 +144,71 @@
   2. Ενημέρωση του html μενού με τις κατάλληλες οδηγίες `routerLink`
 
 
-# Βήμα 5: Event binding
+## Βήμα 5: Event binding
+ 
+- Δέσμευση μεθόδου της κλάσης (event handler) στο συμβάν `event` του template με χρήση του `(eventName)="onEventName($event)"`
+ 
+  ```html
+  <button (click)="onAddPerson()">Add Person</button>
+  ```
+ 
+- Χρήση του event `input` από ένα HTML input element για ανάγνωση της τιμής του στην κλάση και στη συνέχεια πέρασμα πίσω στο template με χρήση της απλής δέσμευση με το `{{ <atribute_name > }}`
+ 
+  ```html
+  <input type="text" (input)="onInput($event)" />
+  ```
 
-Δέσμευση μεθόδου της κλάσης (event handler) στο συμβάν event του template με χρήση του (eventName)="onEventName($event)"
+  ## Βήμα 4: @for Template Directive
+ 
+- Ορισμός χαρακτηριστικού `persons` τύπου `Person[]` στην κλάση `AppComponent` (πίνακας αντικειμένων τύπου `Person`)
+- Χρήση του template directive `@for(obj of objects); track obj` για την εμφάνιση των δεδομένων του πίνακα `persons` με τη χρήση του component `PersonTableComponent`
+ 
+  ```html
+  @for (user of users; track user) {
+  <app-person-table [person]="user"></app-person-table>
+  }
+  ```
 
-<button (click)="onAddPerson()">Add Person</button>
+## Βήμα 3: Component Input
+ 
+- Δημιουργία interface για τα δεδομένα τύπου `Person`
+ 
+  ```bash
+  ng generate interface shared/interfaces/person
+  ```
+ 
+  ```typescript
+  export interface Person {
+    givenName: string;
+    surName: string;
+    age: number;
+    email: string;
+    address: string;
+  }
+  ```
+ 
+- Χρήση του interface `Person` ως τύπο του χαρακτηριστικού `person` στο component `PersonTableComponent`
+ 
+- Χρήση του decorator `@Input()` στο χαρακτηριστικό `person` τύπου `Person` ή `undefined` στο component `PersonTableComponent`
+ 
+- Χρήση του `@if() {} @else {}` στο template του component `PersonTableComponent` για την υπό συνθήκη εμφάνιση των δεδομένων του χαρακτηριστικού `person`
+ 
+- Η δέσμευση των χαρακτηριστικών της κλάσης `AppComponent` στο χαρακτηριστικό `person` του component `PersonTableComponent` γίνεται στο template του component `AppComponent`
+ 
+  ```html
+  <app-person-table [person]="person0"></app-person-table>
+  <!-- Χωρίς δέσμευση στο επόμενο -->
+  <app-person-table></app-person-table>
+  <app-person-table [person]="person1"></app-person-table>
+  ```
 
-Χρήση του event input από ένα HTML input element για ανάγνωση της τιμής του στην κλάση και στη συνέχεια πέρασμα πίσω στο template με χρήση της απλής δέσμευση με το {{ <atribute_name > }}
-
-<input type="text" (input)="onInput($event)" />
-
-# Βήμα 4: @for Template Directive
-
-Ορισμός χαρακτηριστικού persons τύπου Person[] στην κλάση AppComponent (πίνακας αντικειμένων τύπου Person)
-
-Χρήση του template directive @for(obj of objects); track obj για την εμφάνιση των δεδομένων του πίνακα persons με τη χρήση του component PersonTableComponent
-
-@for (user of users; track user) {
-<app-person-table [person]="user"></app-person-table>
-}
-
-# Βήμα 3: Component Input
-
-Δημιουργία interface για τα δεδομένα τύπου Person
-
-ng generate interface shared/interfaces/person
-
-export interface Person {
-  givenName: string;
-  surName: string;
-  age: number;
-  email: string;
-  address: string;
-}
-
-Χρήση του interface Person ως τύπο του χαρακτηριστικού person στο component PersonTableComponent
-
-Χρήση του decorator @Input() στο χαρακτηριστικό person τύπου Person ή undefined στο component PersonTableComponent
-
-Χρήση του @if() {} @else {} στο template του component PersonTableComponent για την υπό συνθήκη εμφάνιση των δεδομένων του χαρακτηριστικού person
-
-Η δέσμευση των χαρακτηριστικών της κλάσης AppComponent στο χαρακτηριστικό person του component PersonTableComponent γίνεται στο template του component AppComponent
-
-<app-person-table [person]="person0"></app-person-table>
-<!-- Χωρίς δέσμευση στο επόμενο -->
-<app-person-table></app-person-table>
-<app-person-table [person]="person1"></app-person-table>
-
-# Βήμα 2: Δημιουργία νέου component
-
-    Δημιουργία ενός νέου component με την εντολή ng generate component components/person-table.
-    Μεταφορά του πίνακα από το app.component.html στο template του νέου component.
-    Μεταφορά του χαρακτηριστικού person από την κλάση AppComponent στην κλάση PersonTableComponent.
-    Συμπερίληψη της κλάσης PersonTableComponent στον πίνακα imports στην αρχικοποίηση του decorator στο αρχείο app.component.ts.
-    Χρήση του νέου component στο template του app.component.html με την ετικέτα <app-person-table></app-person-table>.
+## Βήμα 2: Δημιουργία νέου component
+ 
+- Δημιουργία ενός νέου component με την εντολή `ng generate component components/person-table`.
+- Μεταφορά του πίνακα από το `app.component.html` στο template του νέου component.
+- Μεταφορά του χαρακτηριστικού `person` από την κλάση `AppComponent` στην κλάση `PersonTableComponent`.
+- Συμπερίληψη της κλάσης `PersonTableComponent` στον πίνακα `imports` στην αρχικοποίηση του decorator στο αρχείο `app.component.ts`.
+- Χρήση του νέου component στο template του `app.component.html` με την ετικέτα `<app-person-table></app-person-table>`.
 
 
 # Βήμα 1: Απλή δέσμευση χαρακτηριστικών (one way binding)
